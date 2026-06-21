@@ -1,0 +1,98 @@
+
+-- Step 1: Run the show command
+SHOW COLUMNS IN TABLE NEWDATA_SUMM2026.CLMSPTDTLS.CLMHDRS_TABLE;
+
+-- Step 2: Extract just the column headers as an array list
+SELECT ARRAY_AGG("column_name") AS column_headers 
+FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+
+
+select cast(OMC_CLM_ID as integer) as OMC_CLM_ID
+    from NEWDATA_SUMM2026.CLMSPTDTLS.CLMDTLS_TABLE;
+select cast(OMC_CLM_ID as integer) as OMC_CLM_ID
+    from NEWDATA_SUMM2026.CLMSPTDTLS.CLMHDRS_TABLE;
+
+select * from NEWDATA_SUMM2026.CLMSPTDTLS.CLMDTLS_TABLE
+    order by OMC_CLM_ID;
+    
+select * from NEWDATA_SUMM2026.CLMSPTDTLS.CLMHDRS_TABLE
+    order by OMC_CLM_ID;
+
+SELECT COUNT(*) AS TOTAL_ROWS 
+FROM NEWDATA_SUMM2026.CLMSPTDTLS.CLMDTLS_TABLE;
+
+SELECT COUNT(*) AS TOTAL_ROWS 
+FROM NEWDATA_SUMM2026.CLMSPTDTLS.CLMHDRS_TABLE;
+
+create or replace table NEWDATA_SUMM2026.CLMSPTDTLS.clmdtlshdrs as
+select cd.OMC_CLM_ID,
+    cd.OMC_CLM_DTLS_ID,
+    cd.LINE_NUM,
+    cd.CLM_TYP,
+    cd.INC_FROM,
+    cd.INC_TO,
+    cd.ICD_CD,
+    cd.OMC_ICD_RISK_NBR,
+    cd.SUB_CD,
+    cd.SUB_TYPE,
+    cd.CPT_CD,
+    cd.CLMS_CHRG,
+    cd.PAID_AMT,
+    ch.MBR_ID,
+    ch.PT_CD,
+    ch.LST_NAME,
+    ch.FST_NAME,
+    ch.MDL_NAME,
+    ch.CLM_NUM
+    from NEWDATA_SUMM2026.CLMSPTDTLS.CLMDTLS_TABLE as cd
+    inner join NEWDATA_SUMM2026.CLMSPTDTLS.CLMHDRS_TABLE as ch
+    on cd.OMC_CLM_ID = ch.OMC_CLM_ID;
+
+SELECT COUNT(*) AS TOTAL_ROWS 
+FROM NEWDATA_SUMM2026.CLMSPTDTLS.clmdtlshdrs;
+
+
+select cast(MBR_ID as string) as MBR_ID,
+       cast(FST_NAME as string) as FST_NAME,
+       cast(MDL_NAME as string) as MDL_NAME,
+       cast(LST_NAME as string) as LST_NAME
+    from NEWDATA_SUMM2026.CLMSPTDTLS.clmdtlshdrs;  -- Note: this table is created by a prior statement in this file
+
+select cast(MBR_ID as string) as MBR_ID,
+       cast(FST_NAME as string) as FST_NAME,
+       cast(MDL_NAME as string) as MDL_NAME,
+       cast(LST_NAME as string) as LST_NAME
+    from NEWDATA_SUMM2026.CLMSPTDTLS.PTDTLS_TABLE;
+    
+create or replace table NEWDATA_SUMM2026.CLMSPTDTLS.clmpt as
+select cdh.OMC_CLM_ID,
+    cdh.MBR_ID,
+    cdh.LINE_NUM,
+    cdh.CLM_TYP,
+    cdh.INC_FROM,
+    cdh.INC_TO,
+    cdh.ICD_CD,
+    cdh.omc_icd_risk_nbr,
+    cdh.SUB_CD,
+    cdh.SUB_TYPE,
+    cdh.CPT_CD,
+    cdh.CLMS_CHRG,
+    cdh.PAID_AMT,
+    cdh.PT_CD,
+    cdh.CLM_NUM,
+    pt.FST_NAME,
+    pt.MDL_NAME,
+    pt.LST_NAME,
+    pt.PT_GNDR,
+    pt.PT_DOB,
+    pt.PT_ST,
+    pt.pt_ZIP
+    from NEWDATA_SUMM2026.CLMSPTDTLS.clmdtlshdrs as cdh
+    inner join NEWDATA_SUMM2026.CLMSPTDTLS.PTDTLS_TABLE as pt
+    on cdh.MBR_ID = pt.MBR_ID;
+ --   and cdh.FST_NAME = pt.FST_NAME
+ --   and cdh.LST_NAME = pt.LST_NAME
+ --   and cdh.MDL_NAME = pt.MDL_NAME;
+
+SELECT COUNT(*) AS TOTAL_ROWS 
+FROM NEWDATA_SUMM2026.CLMSPTDTLS.clmpt;
