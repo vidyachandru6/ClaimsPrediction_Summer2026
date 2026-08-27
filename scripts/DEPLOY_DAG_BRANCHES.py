@@ -159,7 +159,7 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
         NEWDATA_task >> [task_dataprep_sqljoins, task_dataprep_numcoding, task_train, TRAINEDMODEL_task]
         DATADRIFT_task >> [task_train, TRAINEDMODEL_task]
 
-    schema = root.databases["my_db"].schemas["my_schema"]
+    schema = Root.databases["my_db"].schemas["my_schema"]
     op = DAGOperation(schema)
     op.deploy(dag, mode=CreateMode.or_replace)
 
