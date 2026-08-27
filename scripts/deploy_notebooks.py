@@ -23,7 +23,6 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     print(f"Using session stage: {session_stage}")
 
     # Step 2: Upload all files from the local folder to the stage
-    local_folder_path = "snow://workspace/VYTALIZE_0171.PUBLIC.'omc_prd_ws'/versions/head/VYTALIZE_0171/notebooks/"
     print(f"Uploading files from: {local_folder_path}")
     session.file.put(f"file://{local_folder_path}/*", session_stage, auto_compress=False, overwrite=True)
 
