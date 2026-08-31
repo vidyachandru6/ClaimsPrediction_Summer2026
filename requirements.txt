@@ -6,6 +6,7 @@ configparser
 snowflake-snowpark-python
 snowflake-connector-python
 snowflake-ml-python
+snowflake-core
 transformers
 tf-keras
 torch

@@ -23,7 +23,6 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     print(f"Using session stage: {session_stage}")
 
     # Step 2: Upload all files from the local folder to the stage
-    local_folder_path = "snow://workspace/VYTALIZE_0171.PUBLIC.'omc_prd_ws'/versions/head/VYTALIZE_0171/notebooks/"
     print(f"Uploading files from: {local_folder_path}")
     session.file.put(f"file://{local_folder_path}/*", session_stage, auto_compress=False, overwrite=True)
 
@@ -53,11 +52,11 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
 # For local debugging
 if __name__ == "__main__":
     import sys
-    from snowflake.snowpark.context import get_active_session
+    from session_utils import get_snowpark_session
 
     # Get a Snowpark session (works in notebook, local, and CI/CD)
     # Note: Session is intentionally never closed to avoid issues in notebooks
-    session = get_active_session()
+    session = get_snowpark_session()
     
     if len(sys.argv) > 4:
         print(main(session, sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]))

@@ -1,0 +1,46 @@
+name: Deploy Demo Objects
+
+# Controls when the action will run. 
+on:
+  push:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: stale
+        uses: actions/stale@v10
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+
+      # Make sure all 7 SNOWFLAKE_ environment variables are set
+      
+      - name: Deploy notebooks
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+          MAX_CON_RETRY_ATTEMPTS: 0
+        run: |
+          python $GITHUB_WORKSPACE/scripts/deploy_notebooks.py VYTALIZE_0171 PROD_SCHEMA DEMO_PIPELINES_NP $GITHUB_WORKSPACE/notebooks
+          python $GITHUB_WORKSPACE/scripts/DEPLOY_DAG_BRANCHES.py VYTALIZE_0171 PROD_SCHEMA DEMO_PIPELINES_NP
