@@ -96,7 +96,7 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
                 QUERY_WAREHOUSE = {warehouse_name}
                 ARGUMENTS = '--database-name {database_name} --schema-name {schema_name}'
             ''', warehouse=warehouse_name)
-        print(f"Dataprep  task parnumbercoding parsed successfully")
+        print(f"Dataprep  task numbercoding parsed successfully")
         task_train = DAGTask("TRAIN_MODEL_ON_NEWDATA", definition=f'''
             EXECUTE NOTEBOOK PROJECT {database_name}.{schema_name}.{notebook_project_name}
                 MAIN_FILE = 'Model_train.ipynb'
@@ -159,7 +159,9 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
         NEWDATA_task >> [task_dataprep_sqljoins, task_dataprep_numcoding, task_train, TRAINEDMODEL_task]
         DATADRIFT_task >> [task_train, TRAINEDMODEL_task]
 
-    schema = Root.databases["my_db"].schemas["my_schema"]
+    api_root = Root(session)
+    schema = api_root.databases[database_name].schemas[schema_name]
+    
     op = DAGOperation(schema)
     op.deploy(dag, mode=CreateMode.or_replace)
 
