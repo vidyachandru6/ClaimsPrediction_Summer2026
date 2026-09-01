@@ -60,7 +60,7 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     # Set the environment context
 #    session.use_schema(f"{database_name}.{schema_name}")
     print(f"Before environment variables")
-    warehouse_name = "OMC_DATA_XSMALL"
+    warehouse_name = "COMPUTE_WH"
     dag_name = "VYTALIZE_CLMCOST_PREDICTION_NESTEDBRANCH_DAG"
     compute_pool = "SYSTEM_COMPUTE_POOL_CPU"
     runtime = "V2.5-CPU-PY3.12"
