@@ -163,7 +163,7 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     schema = api_root.databases[database_name].schemas[schema_name]
     
     op = DAGOperation(schema)
-    op.deploy(dag, mode=CreateMode.or_replace)
+    op.deploy(dag, mode="orreplace")
 
             # For local debugging
     if __name__ == "__main__":
