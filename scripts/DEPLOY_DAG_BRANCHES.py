@@ -163,6 +163,9 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     schema = api_root.databases[database_name].schemas[schema_name]
     
     dag_op = DAGOperation(schema)
+
+    # 2. Specify a PERMANENT stage in the decorator
+    @dag.task(stage_location=f"@{database_name}.{schema_name}.dagbranches_stage")
     dag_op.deploy(dag, mode="orreplace")
     dag_op.run(dag)
 
