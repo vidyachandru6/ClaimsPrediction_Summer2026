@@ -73,6 +73,7 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     # Ensure use_func_return_value=True so the DAG engine reads the returned string
     with DAG (
         "Data_Model_Conditional_dag", schedule = timedelta(days=1), warehouse=warehouse_name, 
+        stage_location=f"@{database_name}.{schema_name}.dagbranches_stage",
         use_func_return_value=True
     ) as dag:
         # Branching task
@@ -164,8 +165,6 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     
     dag_op = DAGOperation(schema)
 
-    # 2. Specify a PERMANENT stage in the decorator
-    @dag.task(stage_location=f"@{database_name}.{schema_name}.dagbranches_stage")
     dag_op.deploy(dag, mode="orreplace")
     dag_op.run(dag)
 
