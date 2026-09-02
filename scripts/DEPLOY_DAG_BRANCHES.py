@@ -155,9 +155,9 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
         )
         print(f"ModelPredictions table check task parsed successfully")
         # Build the new data flow task flow graph
-        TRAINEDMODEL_task >> [task_test, task_datadriftcalc, DATADRIFT_task]
-        NEWDATA_task >> [task_dataprep_sqljoins, task_dataprep_numcoding, task_train, TRAINEDMODEL_task]
-        DATADRIFT_task >> [task_train, TRAINEDMODEL_task]
+        TRAINEDMODEL_task >> [task_test, task_datadriftcalc]
+        NEWDATA_task >> [task_dataprep_sqljoins, task_dataprep_numcoding, task_train]
+        DATADRIFT_task >> [task_train]
 
     api_root = Root(session)
     schema = api_root.databases[database_name].schemas[schema_name]
