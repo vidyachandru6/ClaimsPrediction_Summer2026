@@ -139,7 +139,7 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
                                warehouse = warehouse_name
         )
         
-        DATADRIFT_task = DAGTask(name = "DataDrift_check",
+        DATADRIFT_task = DAGTaskBranch(name = "DataDrift_check",
                                  definition = DataDrift_check,
                                  warehouse = warehouse_name
         )
@@ -149,7 +149,7 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
                                    warehouse = warehouse_name
         )
         
-        MODELPREDICTIONS_task = DAGTask(name="ModelPredictions_check",
+        MODELPREDICTIONS_task = DAGTaskBranch(name="ModelPredictions_check",
                                    definition = ModelPredictions_check,
                                    warehouse = warehouse_name
         )
@@ -162,8 +162,9 @@ def main(session: Session, database_name: str, schema_name: str, notebook_projec
     api_root = Root(session)
     schema = api_root.databases[database_name].schemas[schema_name]
     
-    op = DAGOperation(schema)
-    op.deploy(dag, mode="orreplace")
+    dag_op = DAGOperation(schema)
+    dag_op.deploy(dag, mode="orreplace")
+    dag_op.run(dag)
 
             # For local debugging
     if __name__ == "__main__":
